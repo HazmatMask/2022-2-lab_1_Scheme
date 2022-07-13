@@ -400,32 +400,120 @@
 
 ;FUNCIONES SOLICITADAS
 
+;CARDSSET
+;DOMINIO: LISTA DE ELEMENTOS
+;RECORRIDO: LISTA DE CARTAS
+;CREA, TOMANDO COMO BASE UNA LISTA DE ELEMENTOS VÁLIDA - CANTIDAD DE ELEMENTOS CORRESPONDIENTE A N^2+N+1 - UNA
+;LISTA DE CARTAS QUE SE ADHIEREN A LAS CARACTERÍSTICAS DE UN SET DE DOBBLE.
+
+(define cardsSet
+  (lambda (EL max_cards)
+    (dobbleDeck EL (- max_cards 1))))
+
+;DOBBLE?
+;DOMINIO: LISTA DE CARTAS
+;RECORRIDO: BOOLEAN
+;RECURSION: DE COLA (EN FUNCION "CFDREC")
+;DETERMINA SI UNA LISTA DE CARTAS CORRESPONDE A UN SET DOBBLE VÁLIDO
+
 (define dobble?
   (lambda (CS)
     (CFDRec CS)))
+
+;NUMCARDS
+;DOMINIO: LISTA DE CARTAS
+;RECORRIDO: ENTERO
+;RECURSION: NATURAL
+;DETERMINA LA CANTIDAD DE CARTAS EN UN CARDSET ENTREGADO
 
 (define numCards
   (lambda (CS)
     (CCICSRec CS 0)))
 
+;NTHCARD
+;DOMINIO: LISTA DE CARTAS
+;RECORRIDO: CARTA
+;RECURSION: DE COLA (EN FUNCION "GCBPREC")
+;ARROJA LA ENÉSIMA CARTA DE UN SET DE CARTAS.
+
 (define nthCard
   (lambda (CS N)
     (GCBPRec CS N 0)))
+
+;FINDTOTALCARDS
+;DOMINIO: CARTA
+;RECORRIDO: ENTERO
+;RECURSION: DE COLA (EN FUNCION "NEXTCARDAMOUNT")
+;DETERMINA EL MAXIMO DE ELEMENTOS QUE DEBEN SER SUPLIDOS, DADO LOS ELEMENTOS DE UNA CARTA DE MUESTRA.
 
 (define findTotalCards
   (lambda (C)
     (nextCardAmount C)))
 
+;REQUIREDELEMENTS
+;DOMINIO: CARTA
+;RECORRIDO: ENTERO
+;RECURSION: DE COLA (EN FUNCION "NEXTCARDAMOUNT")
+;DETERMINA EL NUMERO DE CARTAS REQUERIDAS PARA CREAR UN SET DOBBLE VALIDO, DESDE LOS ELEMENTOS DE UNA CARTA DE MUESTRA.
+
 (define requiredElements
   (lambda (C)
     (nextCardAmount C)))
+
+;MISSINGCARDS
+;DOMINIO: LISTA DE CARTAS
+;RECORRIDO: LISTA DE CARTAS
+;RECURSION: DE COLA (EN FUNCION "CFDREC")
+;CREA UNA LISTA DE CARTAS VÁLIDO DESDE UNA LISTA DE ELEMENTOS DE MUESTRA.
 
 (define missingCards
   (lambda (sampleSet)
     (deleteSampleFromFullDeck sampleSet)))
 
+;CARDSSET->STRING
+;DOMINIO: STRING
+;RECORRIDO: LISTA DE CARTAS
+;RECURSION: DE COLA
+;CREA UN STRING DESDE LOS PARAMETROS ASOCIADOS A UN CARDSET DADO
+
 (define cardsSet->string
   (lambda (CS)
     (cardset->stringR CS "")))
+
+(cardsSet '(("element" "A") ("element" "B") ("element" "C")) 3)
+(cardsSet '(("element" "A") ("element" "B") ("element" "C") ("element" "D") ("element" "E") ("element" "F") ("element" "G")) 4)
+(cardsSet '(("element" "A") ("element" "B") ("element" "C") ("element" "D") ("element" "E") ("element" "F") ("element" "G") ("element" "H") ("element" "I") ("element" "J") ("element" "K") ("element" "L") ("element" "M")) 5)
+
+(dobble? (cardsSet '(("element" "A") ("element" "B") ("element" "C")) 3))
+(dobble? '((1 (1 2 3) (1 2 3) (("element" "B") ("element" "A")))  (1 (1 2 3) (1 2 3) (("element" "B") ("element" "A")))  (1 (1 2 3) (1 2 3) (("element" "C") ("element" "B")))))
+(dobble? (cardsSet '(("element" "A") ("element" "B") ("element" "C") ("element" "D") ("element" "E") ("element" "F") ("element" "G")) 4))
+
+(numCards (cardsSet '(("element" "A") ("element" "B") ("element" "C")) 3))
+(numCards '((1 (1 2 3) (1 2 3) (("element" "B") ("element" "A")))  (1 (1 2 3) (1 2 3) (("element" "B") ("element" "A")))  (1 (1 2 3) (1 2 3) (("element" "C") ("element" "B")))))
+(numCards (cardsSet '(("element" "A") ("element" "B") ("element" "C") ("element" "D") ("element" "E") ("element" "F") ("element" "G")) 4))
+
+(nthCard (cardsSet '(("element" "A") ("element" "B") ("element" "C")) 3) 2)
+(nthCard '((1 (1 2 3) (1 2 3) (("element" "B") ("element" "A")))  (1 (1 2 3) (1 2 3) (("element" "B") ("element" "A")))  (1 (1 2 3) (1 2 3) (("element" "C") ("element" "B")))) 1)
+(nthCard (cardsSet '(("element" "A") ("element" "B") ("element" "C") ("element" "D") ("element" "E") ("element" "F") ("element" "G")) 4) 3)
+
+(findTotalCards '(1 (1 2 3) (1 2 3) (("element" "B") ("element" "A"))))
+(findTotalCards '(1 (1 2 3) (1 2 3) (("element" "D") ("element" "C") ("element" "B") ("element" "A"))))
+(findTotalCards '(1 (1 2 3) (1 2 3) (("element" "L") ("element" "H") ("element" "G") ("element" "C"))))
+
+(requiredElements '(1 (1 2 3) (1 2 3) (("element" "B") ("element" "A"))))
+(requiredElements '(1 (1 2 3) (1 2 3) (("element" "D") ("element" "C") ("element" "B") ("element" "A"))))
+(requiredElements '(1 (1 2 3) (1 2 3) (("element" "L") ("element" "H") ("element" "G") ("element" "C"))))
+
+(missingCards '((1 (1 2 3) (1 2 3) (("element" "B") ("element" "A"))) (1 (1 2 3) (1 2 3) (("element" "C") ("element" "A")))))
+(missingCards '((1 (1 2 3) (1 2 3) (("element" "D") ("element" "C") ("element" "B") ("element" "A")))(1 (1 2 3) (1 2 3) (("element" "G") ("element" "F") ("element" "E") ("element" "A")))
+              (1 (1 2 3) (1 2 3) (("element" "J") ("element" "I") ("element" "H") ("element" "A")))(1 (1 2 3) (1 2 3) (("element" "M") ("element" "L") ("element" "K") ("element" "A")))              ))
+(missingCards '((1 (1 2 3) (1 2 3) (("element" "C") ("element" "B") ("element" "A")))
+              (1 (1 2 3) (1 2 3) (("element" "E") ("element" "D") ("element" "A")))
+              (1 (1 2 3) (1 2 3) (("element" "G") ("element" "F") ("element" "A")))))
+
+(cardsSet->string (cardsSet '(("element" "A") ("element" "B") ("element" "C")) 3))
+(cardsSet->string (cardsSet '(("element" "A") ("element" "B") ("element" "C") ("element" "D") ("element" "E") ("element" "F") ("element" "G")) 4))
+(cardsSet->string (cardsSet '(("element" "A") ("element" "B") ("element" "C") ("element" "D") ("element" "E") ("element" "F") ("element" "G") ("element" "H") ("element" "I") ("element" "J") ("element" "K") ("element" "L") ("element" "M")) 5))
+
 
 (provide (all-defined-out))

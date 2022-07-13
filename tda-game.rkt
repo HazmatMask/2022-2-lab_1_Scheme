@@ -483,11 +483,23 @@
 
 ;FUNCIONES REQUERIDAS
 
+;STACKMODE
+;DOMINIO: GAME
+;RECORRIDO: GAME
+;RECURSION: NATURAL (EN FUNCION "NCFDTAREC")
+;TOMA DOS CARTAS DESDE EL DECK DEL JUEGO, Y LAS COLOCA EN EL AREA DE JUEGO DEL MISMO. LUEGO, ELIMINA LAS INSTANCIAS DESDE EL DECK.
+
 (define stackMode
   (lambda (G)
     (if (game? G)
         (nCardsFromDeckToArea G 2)
         #f)))
+
+;REGISTER
+;DOMINIO: STRING X GAME
+;RECORRIDO: GAME
+;RECURSION: COLA (EN FUNCION "AHPREC")
+;REGISTRA UN JUGADOR CON UNA MANO DE CARTAS VACÍA, DADO NOMBRE INGRESADO. VERIFICA QUE EL NOMBRE ESTE LIBRE Y QUE EXISTAN ESPACIOS DISPONIBLES EN EL GAME.
 
 (define register
   (lambda (name G)
@@ -495,24 +507,286 @@
         (addPlayerToGame G name)
         G)))
 
+;WHOSETURNISIT?
+;DOMINIO: GAME
+;RECORRIDO: STRING
+;SOLICITA EL ELEMENTO DEL GAME ASOCIADO AL TURNO ACTUAL.
+
 (define whoseTurnIsIt?
   (lambda (G)
     (getGameTurn G)))
+
+;PLAY
+;DOMINIO: GAME X PROCEDURE X PROCEDURE
+;RECORRIDO: GAME
+;REALIZA UNA JUGADA, DADO PROCEDIMIENTO ENTREGADO ("NULL", "PASS", "SPOTIT", O "FINISH")
 
 (define play
   (lambda (G action randFunc)
     (action G randFunc)))
 
+;STATUS
+;DOMINIO: GAME
+;RECORRIDO: STRING
+;SOLICITA EL ELEMENTO DEL GAME ASOCIADO AL ESTADO DEL JUEGO.
+
 (define status
   (lambda (G)
     (getGameStatus G)))
 
+;SCORE
+;DOMINIO: GAME X STRING
+;RECORRIDO: ENTERO
+;RECURSION: DE COLA (EN FUNCION "GPBNFLREC")
+;DETERMINA EL LARGO DE LA LISTA "CARDS" DE UN JUGADOR, CALCULANDO ASI EL PUNTAJE ASOCIADO A DICHO JUGADOR.
+
 (define score
   (lambda (G name)
     (getPlayerScore (getPlayerByNameFromList (getGamePlayers G) name))))
+
+;ADDCARD
+;DOMINIO: LISTA DE CARTAS X CARTA
+;RECORRIDO: LISTA DE CARTAS
+;CONCATENA UNA CARTA ENTREGADA CON UNA LISTA DE CARTAS ENTREGADA.
 
 (define addCard
   (lambda (CS C)
     (if (dobble? (cons C CS))
         (cons C CS)
         CS)))
+
+
+(stackMode '(("AREA DE JUEGO" ())
+  ((1 (1 2 3) (1 2 3) (("element" "D") ("element" "C") ("element" "B") ("element" "A")))
+   (1 (1 2 3) (1 2 3) (("element" "G") ("element" "F") ("element" "E") ("element" "A")))
+   (1 (1 2 3) (1 2 3) (("element" "J") ("element" "I") ("element" "H") ("element" "A")))
+   (1 (1 2 3) (1 2 3) (("element" "M") ("element" "L") ("element" "K") ("element" "A")))
+   (1 (1 2 3) (1 2 3) (("element" "K") ("element" "H") ("element" "E") ("element" "B")))
+   (1 (1 2 3) (1 2 3) (("element" "L") ("element" "I") ("element" "F") ("element" "B")))
+   (1 (1 2 3) (1 2 3) (("element" "M") ("element" "J") ("element" "G") ("element" "B")))
+   (1 (1 2 3) (1 2 3) (("element" "M") ("element" "I") ("element" "E") ("element" "C")))
+   (1 (1 2 3) (1 2 3) (("element" "K") ("element" "J") ("element" "F") ("element" "C")))
+   (1 (1 2 3) (1 2 3) (("element" "L") ("element" "H") ("element" "G") ("element" "C")))
+   (1 (1 2 3) (1 2 3) (("element" "L") ("element" "J") ("element" "E") ("element" "D")))
+   (1 (1 2 3) (1 2 3) (("element" "M") ("element" "H") ("element" "F") ("element" "D")))
+   (1 (1 2 3) (1 2 3) (("element" "K") ("element" "I") ("element" "G") ("element" "D"))))
+  (("famine" ()) ("death" ()) ("war" ()) ("voidname" ()))
+  "starting"
+  stackMode
+  myRandom
+  "voidname"))
+
+(stackMode '(("AREA DE JUEGO" ((1 (1 2 3) (1 2 3) (("element" "D") ("element" "C") ("element" "B") ("element" "A")))
+   (1 (1 2 3) (1 2 3) (("element" "G") ("element" "F") ("element" "E") ("element" "A")))
+   (1 (1 2 3) (1 2 3) (("element" "J") ("element" "I") ("element" "H") ("element" "A")))
+   (1 (1 2 3) (1 2 3) (("element" "M") ("element" "L") ("element" "K") ("element" "A")))
+   (1 (1 2 3) (1 2 3) (("element" "K") ("element" "H") ("element" "E") ("element" "B")))))
+  ()
+  (("famine" ()) ("death" ()) ("war" ()) ("voidname" ()))
+  "starting"
+  stackMode
+  myRandom
+  "voidname"))
+
+(stackMode '(("AREA DE JUEGO" ((1 (1 2 3) (1 2 3) (("element" "D") ("element" "C") ("element" "B") ("element" "A")))
+   (1 (1 2 3) (1 2 3) (("element" "G") ("element" "F") ("element" "E") ("element" "A")))
+   (1 (1 2 3) (1 2 3) (("element" "J") ("element" "I") ("element" "H") ("element" "A")))
+   (1 (1 2 3) (1 2 3) (("element" "M") ("element" "L") ("element" "K") ("element" "A")))
+   (1 (1 2 3) (1 2 3) (("element" "K") ("element" "H") ("element" "E") ("element" "B")))))
+  ((1 (1 2 3) (1 2 3) (("element" "L") ("element" "I") ("element" "F") ("element" "B")))
+   (1 (1 2 3) (1 2 3) (("element" "M") ("element" "J") ("element" "G") ("element" "B")))
+   (1 (1 2 3) (1 2 3) (("element" "M") ("element" "I") ("element" "E") ("element" "C")))
+   (1 (1 2 3) (1 2 3) (("element" "K") ("element" "J") ("element" "F") ("element" "C")))
+   (1 (1 2 3) (1 2 3) (("element" "L") ("element" "H") ("element" "G") ("element" "C")))
+   (1 (1 2 3) (1 2 3) (("element" "L") ("element" "J") ("element" "E") ("element" "D")))
+   (1 (1 2 3) (1 2 3) (("element" "M") ("element" "H") ("element" "F") ("element" "D")))
+   (1 (1 2 3) (1 2 3) (("element" "K") ("element" "I") ("element" "G") ("element" "D"))))
+  (("famine" ()) ("death" ()) ("war" ()) ("voidname" ()))
+  "starting"
+  stackMode
+  myRandom
+  "voidname"))
+
+
+(register "famine" (game 4 (dobbleDeck '(("element" "A") ("element" "B") ("element" "C") ("element" "D") ("element" "E")
+                                                         ("element" "F") ("element" "G") ("element" "H") ("element" "I")
+                                                         ("element" "J") ("element" "K") ("element" "L") ("element" "M")) 4)
+                         stackMode myRandom))
+
+(register "death" (register "famine" (game 4 (dobbleDeck '(("element" "A") ("element" "B") ("element" "C") ("element" "D")
+                                                                           ("element" "E") ("element" "F") ("element" "G")
+                                                                           ("element" "H") ("element" "I") ("element" "J")
+                                                                           ("element" "K") ("element" "L") ("element" "M")) 4)
+                                           emptyHandStackMode myRandom)))
+
+(register "war" (register "death" (register "famine" (game 4 (dobbleDeck '(("element" "A") ("element" "B") ("element" "C")
+                                                                                           ("element" "D") ("element" "E")
+                                                                                           ("element" "F") ("element" "G")
+                                                                                           ("element" "H") ("element" "I")
+                                                                                           ("element" "J") ("element" "K")
+                                                                                           ("element" "L") ("element" "M")) 4)
+                                                           emptyHandStackMode myRandom))))
+
+(whoseTurnIsIt? '(("AREA DE JUEGO" ())
+  ()
+  (("famine" ()) ("death" ()) ("war" ()) ("voidname" ()))
+  "starting"
+  stackMode
+  myRandom
+  "famine"))
+
+(whoseTurnIsIt? '(("AREA DE JUEGO" ())
+  ()
+  (("famine" ()) ("death" ()) ("war" ()) ("voidname" ()))
+  "starting"
+  stackMode
+  myRandom
+  "war"))
+
+(whoseTurnIsIt? '(("AREA DE JUEGO" ())
+  ()
+  (("famine" ()) ("death" ()) ("war" ()) ("voidname" ()))
+  "starting"
+  stackMode
+  myRandom
+  "plague"))
+
+
+(play (register "plague"
+                (register "war" (register "death"
+                                          (register "famine"
+                                                    (game 4 (dobbleDeck '(("element" "A") ("element" "B") ("element" "C")
+                                                                                          ("element" "D") ("element" "E")
+                                                                                          ("element" "F") ("element" "G")
+                                                                                          ("element" "H") ("element" "I")
+                                                                                          ("element" "J") ("element" "K")
+                                                                                          ("element" "L") ("element" "M")) 4)
+                                                          emptyHandStackMode myRandom))))) null myRandom)
+
+(play (play (register "plague"
+                (register "war" (register "death"
+                                          (register "famine"
+                                                    (game 4 (dobbleDeck '(("element" "A") ("element" "B") ("element" "C")
+                                                                                          ("element" "D") ("element" "E")
+                                                                                          ("element" "F") ("element" "G")
+                                                                                          ("element" "H") ("element" "I")
+                                                                                          ("element" "J") ("element" "K")
+                                                                                          ("element" "L") ("element" "M")) 4)
+                                                          emptyHandStackMode myRandom))))) null myRandom) (spotit '("element" "C")) myRandom)
+
+
+(play (play (play
+             (register "plague"
+                       (register "war"
+                                 (register "death"
+                                           (register "famine"
+                                                     (game 4 (dobbleDeck '(("element" "A") ("element" "B") ("element" "C")
+                                                                                           ("element" "D") ("element" "E")
+                                                                                           ("element" "F") ("element" "G")
+                                                                                           ("element" "H") ("element" "I")
+                                                                                           ("element" "J") ("element" "K")
+                                                                                           ("element" "L") ("element" "M")) 4)
+                                                           emptyHandStackMode myRandom))))) null myRandom) (spotit '("element" "C")) myRandom) null myRandom)
+
+
+(status '(("AREA DE JUEGO"
+   ())
+  (("famine" ())
+   ("death"
+    ((1 (1 2 3) (1 2 3) (("element" "L") ("element" "I") ("element" "F") ("element" "B")))
+     (1 (1 2 3) (1 2 3) (("element" "G") ("element" "F") ("element" "E") ("element" "A")))))
+   ("war"
+    ((1 (1 2 3) (1 2 3) (("element" "M") ("element" "J") ("element" "G") ("element" "B")))
+     (1 (1 2 3) (1 2 3) (("element" "J") ("element" "I") ("element" "H") ("element" "A")))))
+   ("plague"
+    ((1 (1 2 3) (1 2 3) (("element" "M") ("element" "I") ("element" "E") ("element" "C")))
+     (1 (1 2 3) (1 2 3) (("element" "M") ("element" "L") ("element" "K") ("element" "A"))))))
+  "in process"
+  emptyHandStackMode
+  myRandom
+  "famine"))
+
+(status '(("AREA DE JUEGO"
+   ())
+  (("famine" ())
+   ("death"
+    ((1 (1 2 3) (1 2 3) (("element" "L") ("element" "I") ("element" "F") ("element" "B")))
+     (1 (1 2 3) (1 2 3) (("element" "G") ("element" "F") ("element" "E") ("element" "A")))))
+   ("war"
+    ((1 (1 2 3) (1 2 3) (("element" "M") ("element" "J") ("element" "G") ("element" "B")))
+     (1 (1 2 3) (1 2 3) (("element" "J") ("element" "I") ("element" "H") ("element" "A")))))
+   ("plague"
+    ((1 (1 2 3) (1 2 3) (("element" "M") ("element" "I") ("element" "E") ("element" "C")))
+     (1 (1 2 3) (1 2 3) (("element" "M") ("element" "L") ("element" "K") ("element" "A"))))))
+  "empate: death, war, plague."
+  emptyHandStackMode
+  myRandom
+  "famine"))
+
+(status '(("AREA DE JUEGO"
+   ())
+  (("famine" ())
+   ("death" ())
+   ("war" ())
+   ("plague"
+    ((1 (1 2 3) (1 2 3) (("element" "M") ("element" "I") ("element" "E") ("element" "C")))
+     (1 (1 2 3) (1 2 3) (("element" "M") ("element" "L") ("element" "K") ("element" "A"))))))
+  "ganador: plague"
+  emptyHandStackMode
+  myRandom
+  "famine"))
+
+(score '(("AREA DE JUEGO"
+   ())
+         ()
+         (("famine" ())
+          ("death" ())
+          ("war" ())
+          ("plague"
+           ((1 (1 2 3) (1 2 3) (("element" "M") ("element" "I") ("element" "E") ("element" "C")))
+            (1 (1 2 3) (1 2 3) (("element" "M") ("element" "L") ("element" "K") ("element" "A"))))))
+  "ganador: plague"
+  emptyHandStackMode
+  myRandom
+  "famine") "famine")
+
+(score '(("AREA DE JUEGO"
+          ())
+         ()
+         (("famine" ())
+          ("death" ())
+          ("war" ())
+          ("plague"
+           ((1 (1 2 3) (1 2 3) (("element" "M") ("element" "I") ("element" "E") ("element" "C")))
+            (1 (1 2 3) (1 2 3) (("element" "M") ("element" "L") ("element" "K") ("element" "A"))))))
+         "ganador: plague"
+         emptyHandStackMode
+         myRandom
+         "famine") "plague")
+
+(score '(("AREA DE JUEGO"
+          ())
+         ()
+         (("famine" ())
+          ("death" ())
+          ("war" ())
+   ("plague"
+    ((1 (1 2 3) (1 2 3) (("element" "M") ("element" "I") ("element" "E") ("element" "C")))
+     (1 (1 2 3) (1 2 3) (("element" "M") ("element" "L") ("element" "K") ("element" "A"))))))
+         "ganador: plague"
+         emptyHandStackMode
+         myRandom
+         "famine") "war")
+
+(addCard '((1 (1 2 3) (1 2 3) (("element" "K") ("element" "L") ("element" "D") ("element" "M")))
+           (1 (1 2 3) (1 2 3) (("element" "C") ("element" "B") ("element" "A") ("element" "M"))))
+         '(1 (1 2 3) (1 2 3) (("element" "G") ("element" "I") ("element" "H") ("element" "M"))))
+(addCard '() '(1 (1 2 3) (1 2 3) (("element" "C") ("element" "B") ("element" "A") ("element" "M"))))
+(addCard '((1 (1 2 3) (1 2 3) (("element" "F") ("element" "A") ("element" "C")))
+           (1 (1 2 3) (1 2 3) (("element" "D") ("element" "G") ("element" "C")))
+           (1 (1 2 3) (1 2 3) (("element" "E") ("element" "B") ("element" "C")))
+           (1 (1 2 3) (1 2 3) (("element" "B") ("element" "G") ("element" "A")))
+           (1 (1 2 3) (1 2 3) (("element" "E") ("element" "G") ("element" "F"))))
+  '(1 (1 2 3) (1 2 3) (("element" "B") ("element" "D") ("element" "F"))))
+
+
